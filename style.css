@@ -37,6 +37,11 @@ body {
     line-height: 1;
 }
 
+img {
+    width: 100%;
+    height: 100%;
+}
+
 /* === Reusable Classes */
 .container {
     padding: 0 2rem;
@@ -128,18 +133,18 @@ body {
     overflow: hidden;
 }
 
-.products__image {
-    /* background-color: var(--white-color); */
-    background-color: #222;
-    height: 180px;
+.products__cart-image {
+    background-color: var(--white-color);
+    height: 200px;
     border-bottom: 2px solid var(--grey-color);
-    padding: 1rem;
+    padding: 3rem 4rem;
 }
 
 .products__cart-content {
     flex: 1 1 140px;
     display: grid;
     grid-template-rows: 1fr auto auto;
+    background-color: var(--white-color);
     padding: 1rem;
 }
 
