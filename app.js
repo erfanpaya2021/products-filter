@@ -9,6 +9,8 @@ const productsWrapper = document.querySelector(".products__wrapper");
 // === APP VARIABLES ===
 let products = [];
 let categories = ["all"];
+let filterValue;
+let filteredProducts;
 
 // === FUNCTIONS ===
 
@@ -88,21 +90,7 @@ const createCategory = (category) => {
     categoriesWrapper.appendChild(categoryButton);
 };
 
-//  === ADD CARTS AND CATEGORIES TO DOM ===
-const showDataInDom = () => {
-    products.forEach((product) => {
-        createCart(product);
-    });
-
-    getCategories();
-    categories.forEach((category) => {
-        createCategory(category);
-    });
-
-    // CALL FILTER FUNCTION
-    filterProducts();
-};
-
+// == FILTER PRODUCTS FUNCTION
 const filterProducts = () => {
     // GET CATEGORY BUTTONS
     const categoryButtons = document.querySelectorAll(
@@ -111,15 +99,16 @@ const filterProducts = () => {
 
     categoryButtons.forEach((button) => {
         button.addEventListener("click", (e) => {
-            const filterValue = button.innerText.toLowerCase();
-            let filteredProducts;
+            filterValue = button.innerText;
 
             // CHECK FILTER VALUE AND PUSH ITEMS TO FILTERED PRODUCTS ARRAY
             if (filterValue === "all") {
                 filteredProducts = [...products];
             } else {
                 filteredProducts = products.filter(
-                    (product) => product.category.toLowerCase() === filterValue,
+                    (product) =>
+                        product.category.toLowerCase() ===
+                        filterValue.toLowerCase(),
                 );
             }
 
@@ -134,4 +123,48 @@ const filterProducts = () => {
             });
         });
     });
+};
+
+// SEARCH IN PRODUCTS FUNCTION
+const searchInProducts = () => {
+    searchInput.addEventListener("input", (e) => {
+        filterValue = e.target.value;
+
+        if (filterValue == "") {
+            filteredProducts = [...products];
+        } else {
+            filteredProducts = products.filter((product) =>
+                product.title.toLowerCase().includes(filterValue.toLowerCase()),
+            );
+            console.log(filteredProducts);
+        }
+
+        // CLEAR PRODUCTS WRAPPER
+        while (productsWrapper.lastElementChild) {
+            productsWrapper.lastElementChild.remove();
+        }
+
+        // ADD FILTERED PRODUCTS TO PRODUCT WRAPPER
+        filteredProducts.forEach((product) => {
+            createCart(product);
+        });
+    });
+};
+
+//  === ADD CARTS AND CATEGORIES TO DOM ===
+const showDataInDom = () => {
+    products.forEach((product) => {
+        createCart(product);
+    });
+
+    getCategories();
+    categories.forEach((category) => {
+        createCategory(category);
+    });
+
+    // CALL FILTER FUNCTION
+    filterProducts();
+
+    // CALL SEARCH IN PRODUCTS
+    searchInProducts();
 };
