@@ -18,8 +18,11 @@ const getProducts = async (url) => {
     const data = await res.json();
     products = [...data];
     products.shift();
+
+    showDataInDom();
 };
 
+getProducts(url);
 // == GET CATEGORIES FUNCTION ==
 const getCategories = () => {
     products.forEach((product) => {
@@ -27,7 +30,6 @@ const getCategories = () => {
             categories.push(product.category);
     });
 };
-getProducts(url);
 
 // == CREATE CART FUNCTION ==
 const createCart = (product) => {
@@ -79,7 +81,7 @@ const createCart = (product) => {
 const createCategory = (category) => {
     // CREATE CATEGORY BUTTON
     const categoryButton = document.createElement("button");
-    categoryButton.className = "btn btn-primary";
+    categoryButton.className = "products__category-button btn btn-primary";
     categoryButton.innerText = category;
 
     // ADD CATEGORY BUTTON TO CATEGORY WRAPPER
@@ -87,7 +89,7 @@ const createCategory = (category) => {
 };
 
 //  === ADD CARTS AND CATEGORIES TO DOM ===
-setTimeout(() => {
+const showDataInDom = () => {
     products.forEach((product) => {
         createCart(product);
     });
@@ -96,4 +98,40 @@ setTimeout(() => {
     categories.forEach((category) => {
         createCategory(category);
     });
-}, 3000);
+
+    // CALL FILTER FUNCTION
+    filterProducts();
+};
+
+const filterProducts = () => {
+    // GET CATEGORY BUTTONS
+    const categoryButtons = document.querySelectorAll(
+        ".products__category-button",
+    );
+
+    categoryButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const filterValue = button.innerText.toLowerCase();
+            let filteredProducts;
+
+            // CHECK FILTER VALUE AND PUSH ITEMS TO FILTERED PRODUCTS ARRAY
+            if (filterValue === "all") {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(
+                    (product) => product.category.toLowerCase() === filterValue,
+                );
+            }
+
+            // CLEAR PRODUCTS WRAPPER
+            while (productsWrapper.lastElementChild) {
+                productsWrapper.lastElementChild.remove();
+            }
+
+            // ADD FILTERED PRODUCTS TO PRODUCT WRAPPER
+            filteredProducts.forEach((product) => {
+                createCart(product);
+            });
+        });
+    });
+};
